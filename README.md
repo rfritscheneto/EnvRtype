@@ -10,14 +10,20 @@
   ## Background
   
   > Environmental typing (envirotyping) has proven useful in identifying the non-genetic drivers of phenotypic adaptation in plant breeding. Combined with phenotyping and genotyping data, the use of envirotyping data may leverage the molecular breeding strategies to cope with environmental changing scenarios. Over the last ten years, this data has been incorporated in genomic-enabled prediction models aiming to better model genotype x environment interaction (GE) as a function of reaction norm. However, there is difficult for most breeders to deal with the interplay between envirotyping, ecophysiology, and genetics. 
-> Here we present the EnvRtype R package as a new toolkit developed to facilitate the interplay between envirotyping and genomic prediction. This package offers three modules: (1) collection and processing data set, (2) environmental characterization, (3) build of ecophysiological enriched genomic prediction models accounting for three different structures of reaction norm. Here we focus our efforts to present a practical use of EnvRtype package in supporting the genome-wide prediction of reaction norms. We provide a intuitive framework to integrate different reaction norm models in Bayesian Genomic Genotype x Environment Interaction (BGGE) package.
+> Here we present the EnvRtype R package as a new toolkit developed to facilitate the interplay between envirotyping and genomic prediction. This package offers three modules: 
+
+(1) collection and processing data set, 
+(2) environmental characterization, 
+(3) build of ecophysiological enriched genomic prediction models accounting for three different structures of reaction norm. 
+
+Here we focus our efforts to present a practical use of EnvRtype package in supporting the genome-wide prediction of reaction norms. We provide an intuitive framework to integrate different reaction norm models in the Bayesian Genomic Genotype x Environment Interaction (BGGE) package.
 
 <div id="menu" />
   
   ---------------------------------------------
   ## Resources
   
-  > EnvRtype consists in three modules (sections 2-4), which collectively generate a simple workflow to collect, process and integrates envirotyping data into genomic prediction over multiple environments.
+  > EnvRtype consists of three modules (sections 2-4), which collectively generate a simple workflow to collect, process, and integrates envirotyping data into genomic prediction over multiple environments.
 
 * [1. Install and Required Packages](#Instal)
 * [2. Environmental Sensing Module](#P1)
@@ -85,13 +91,13 @@ library(EnvRtype)
  
  ### Geographic Information Dabases
  
- > The collection, organization and processing of environmental data is a step that requires equipment installed in the field. Such equipment can be expensive or difficult to access for some research groups in certain regions or countries. For this reason, we decided to insert a routine for collecting climatic data through the [NASA POWER base](https://power.larc.nasa.gov/), which can access information on a daily scale anywhere on the globe.
+ > The collection, organization, and processing of environmental data is a step that requires equipment installed in the field. Such equipment can be expensive or difficult to access for some research groups in certain regions or countries. For this reason, we decided to insert a routine for collecting climatic data through the [NASA POWER base](https://power.larc.nasa.gov/), which can access information on a daily scale on the globe.
  
  > The [Raster Package](https://cran.r-project.org/web/packages/raster/raster.pdf) also offers a digital platform for downloading files in raster format of climatic data (from the [WorldClim database](https://www.worldclim.org/)) and [SRTM (elevation)](http://srtm.csi.cgiar.org/) using only geographical coordinates (Latitude and Longitude).
  
- > To facilitate the use by researchers, especially in the field of genetics and plant breeding, we have integrated these platforms in the functions below:
+ > To facilitate the use of researchers, especially in genetics and plant breeding, we have integrated these platforms in the functions below:
  
-> * Preparing de informations (latitude, longitude, start day and end date)
+> * Preparing de information (latitude, longitude, start day and end date)
 
 ```{r}
 lat = c(-13.05,-12.32,-18.34,-18.90,-23.03)  # vector of latitude WGS84
@@ -139,7 +145,7 @@ summaryWTH(df.clim,env.id = 'env',var.id = 'T2M')
 summaryWTH(df.clim,env.id = 'env',var.id = c('T2M','T2M_MAX')) # or more than one
 ```
 
-> * Summary by time intervals. Dividing the development cycle into time intervals (e.g., phenology), whether phenological or fixed time intervals (e.g. 10-day intervals) helps to understand the temporal variation of environmental factors during the crop growth cycle.
+ > * Summary by time intervals. Dividing the development cycle into time intervals (e.g., phenology), whether phenological or fixed time intervals (e.g., 10-day intervals), help us to understand the temporal variation of environmental factors during the crop growth cycle.
 
 ```{r}
 summaryWTH(df.clim,env.id = 'env',by.interval = T)
@@ -186,13 +192,13 @@ summaryWTH(df.clim,env.id = 'env',statistic = 'quantile',probs = c(.20,.76,.90))
 
 ### Building Environmental Covariable Matrices
                   
-> * Environmental variables can be used as indicators of the quality of an environment (experiment, location). A double entry table (*q* environments x *k* environmental factors) can be built as suggested by Jarquin et al (2014). Hereafther we will refer to this matrix as **W**, and therefore, it will be obtained by the function *W.matrix*:
+> * Environmental variables can be used as indicators of the quality of an environment (experiment, location). A two-way table (*q* environments x *k* environmental factors) can be built as suggested by Jarquin et al. (2014). Hereafter we will refer to this matrix as **W**, and therefore, it will be obtained by the function *W.matrix*:
 
 ```{r}
 W.matrix(env.data = df.clim,by.interval = F)
 ```
 
-> * As shown in the *summaryWTH* function, we can create time windows to capture the temporal variability between environmental information.To do this, we use the arguments *by.interval = TRUE* and *time.window* to define time limits. Such limits refer to the beginning of climate information. In the example below, for example, the first interval is for 0 to 14 days after planting, the second for 15 to 35 days after planting, and so on respectively.
+> * As shown in the *summaryWTH* function, we can create time windows to capture the temporal variability between environmental information. To do this, we use the arguments *by.interval = TRUE* and *time.window* to define time limits. Such limits refer to the beginning of climate information. In this example, the first interval is from 0 to 14 days after planting, the second from 15 to 35 days after planting, and so on, respectively.
 
 ```{r}
 W.matrix(env.data = df.clim,by.interval = T, time.window = c(0,14,35,60,90,120))
@@ -237,7 +243,7 @@ W.matrix(env.data = data,is.processed = T)
                       
 ## Environmental Characterization Module
 
-> *  Environmental characterization is a fundamental step to understand how the environment regulates the phenotypic expression and adaptation of the genotypes under different growing conditions. For this reason, based on envirotyping (environmental + typing) studies alredy published (see references), we provide mechanisms that enable the typing of environmental factors in terms of frequency of occurrence. We have also developed functions for collecting environmental factors and organizing them as covariates to be used in reaction norm studies.
+> *  Environmental characterization is a fundamental step to understand how the environment regulates the phenotypic expression and adaptation of the genotypes under different growing conditions. For this reason, based on envirotyping (environmental + typing) studies already published (see references), we provide mechanisms that enable the typing of environmental factors in terms of frequency of occurrence. We have also developed functions for collecting environmental factors and organizing them as covariates to be used in reaction norm studies.
 
 ### Environmental Typologies
 
@@ -253,7 +259,7 @@ EnvTyping(env.data = df.clim,env.id = 'env',var.id='T2M')
 EnvTyping(env.data = df.clim,env.id = 'env',var.id='T2M',by.interval = T)
 ```
 
-> * Typologies can be defined across **specific** time intervals by setting the argument *by.interval = TRUE* and and defining the time windows (in days after begining of the data) using the function *time.window*
+> * Typologies can be defined across **specific** time intervals by setting the argument *by.interval = TRUE*, and defining the time windows (in days after the beginning of the data) using the function *time.window*
 
 ```{r}
 EnvTyping(env.data = df.clim,env.id = 'env',var.id='T2M',by.interval = T,time.window = c(0,15,35,65,90,120))
@@ -361,7 +367,7 @@ cardinals <- list(T2M=c(0,9,22,32,45),PRECTOT=c(0,5,10),WS2M=c(0,1,5))
 EnvTyping(env.data = df.clim,var.id =  c('T2M','PRECTOT','WS2M'),cardinals = cardinals,env.id='env')
 ```
 
-> * These cardinals must respect ecophysiological limits for each crop, germplasm or region. For that, we recommend looking for ecophysiology literature and crop growth modeling, such as Soltani and Sinclar (2012) [**Modeling physiology of crop development, growth and yield**](https://www.amazon.com.br/Modeling-Physiology-Development-Growth-Yield/dp/1845939700); However, we do not always have ecophysiological information about the best possible cardinals ... so we use quantiles!
+> * These cardinals must respect ecophysiological limits for each crop, germplasm, or region. For that, we recommend looking for ecophysiology literature and crop growth modeling, such as Soltani and Sinclar (2012) [**Modeling physiology of crop development, growth and yield**](https://www.amazon.com.br/Modeling-Physiology-Development-Growth-Yield/dp/1845939700); However, we do not always have ecophysiological information about the best possible cardinals ... so we use quantiles!
 
 > * If quantiles = NULL, 1%, 25%, 50%, 99% is assumed
 ```{r}
@@ -495,7 +501,7 @@ reaction = FALSE, but K_E != NULL, only random environmental effects using K_E a
 
 **________________________________________________________________________________________________________**  
 
-- Returns benchmark main effect model plus random environmental covariables:
+- It returns a benchmark main effect model plus random environmental covariables:
 
 <p align="center">
   <img width="140" height="18" src="/fig/mod6.png">
@@ -504,7 +510,7 @@ reaction = FALSE, but K_E != NULL, only random environmental effects using K_E a
 ```{r}
 EMM <-get_kernel(K_G = list(G=G),K_E = list(W=H$envCov), Y = Y,model = 'EMM') 
 ```
-- Returns benchmark main GxE deviation model plus random environmental covariables: 
+- It returns a benchmark main GxE deviation model plus random environmental covariables: 
 
 <p align="center">
   <img width="180" height="18" src="/fig/mod7.png">
@@ -514,7 +520,7 @@ EMM <-get_kernel(K_G = list(G=G),K_E = list(W=H$envCov), Y = Y,model = 'EMM')
 EMDs <-get_kernel(K_G = list(G=G),Y = Y,K_E = list(W=H$envCov),model = 'EMDs') # or model = MDs
 
 ```
-- Returns reaction norm model: 
+- It returns a reaction norm model: 
 
 <p align="center">
   <img width="200" height="18" src="/fig/mod8.png">
@@ -525,7 +531,7 @@ RN <-get_kernel(K_G = list(G=G),K_E = list(W=H$envCov), Y = Y,model = 'RNMM')
 
 ```
 
-- Returns a full reaction norm model with GE and GW kernels: 
+- It returns a full reaction norm model with GE and GW kernels: 
 
 <p align="center">
   <img width="220" height="18" src="/fig/mod9.png">
@@ -548,7 +554,7 @@ W <- EnvKernel(env.data = W.cov,Y = Y,merge = T,env.id = 'env',bydiag=TRUE)
 EMM <-get_kernel(K_G = list(G=G),K_E = list(W=W$envCov), Y = Y,,model = 'EMM',size_E = 'environment')
 
 
-# Its possible to integrate more than one environmental kernel
+# It is possible to integrate more than one environmental kernel
 T.cov<- EnvTyping(env.data=df.clim,var.id =  c('T2M','PRECTOT','WS2M'),env.id='env',format = 'wide')
 eT <- EnvKernel(env.data =T.cov,Y = Y,merge = T,env.id = 'env',bydiag=TRUE)
 
@@ -598,7 +604,7 @@ This package is a initiative from the [Allogamous Plant Breeding Lab (University
 
 > * [Humberto Fanelli](https://github.com/humbertofanelli), PhD in Genetics and Plant Breeding
 
-> * [Roberto Fritsche-Neto](roberto.neto@usp.br), PhD Candidate in Genetics and Plant Breeding
+> * [Roberto Fritsche-Neto](roberto.neto@usp.br), Professor of Genetics and Plant Breeding
 
 > * [University of São Paulo (ESALQ/USP)](https://www.esalq.usp.br/)
 
